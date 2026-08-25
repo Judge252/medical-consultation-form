@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0a1020">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="טופס ייעוץ ובדיקה רפואית של TheClinic">
+    <title>טופס ייעוץ ובדיקה רפואית | TheClinic</title>
+    <link rel="icon" type="image/png" href="assets/theclinic-logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="skip-link" href="#medical-consultation-form">מעבר ישירות לטופס</a>
+
+    <div class="site-background" aria-hidden="true">
+        <span class="background-orb orb-gold"></span>
+        <span class="background-orb orb-teal"></span>
+        <span class="background-orb orb-blue"></span>
+        <span class="noise-layer"></span>
+    </div>
+
+    <main class="page-shell">
+        <header class="clinic-header" aria-labelledby="page-title">
+            <div class="logo-panel">
+                <img src="assets/theclinic-logo.png" alt="TheClinic Healthcare and Therapy" class="clinic-logo" width="800" height="321">
+            </div>
+
+            <div class="header-copy">
+                <p class="header-kicker">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.7 2.8 8.9 7 10 4.2-1.1 7-5.3 7-10V6l-7-3Zm0 4v8m-4-4h8"/></svg>
+                    הקליניקה – מרכז רופאי אורתופדי ונוירולוגי
+                </p>
+                <h1 id="page-title">טופס ייעוץ ובדיקה רפואית</h1>
+                <p class="intro-text">יש למלא את פרטי הייעוץ והבדיקה. שדות החובה מסומנים בכוכבית.</p>
+
+                <address class="clinic-contact" aria-label="פרטי התקשרות עם הקליניקה">
+                    <span>סניף טורעאן, רח' אבו בכר <bdi dir="ltr">13</bdi></span>
+                    <span>סניף רמלה, ד״ר סאלק <bdi dir="ltr">25</bdi></span>
+                    <a href="tel:+972526020026" dir="ltr">052-6020026</a>
+                    <a href="tel:+97246034691" dir="ltr">04-6034691</a>
+                    <a href="mailto:The_clinic_t@gmail.com" dir="ltr">The_clinic_t@gmail.com</a>
+                </address>
+            </div>
+        </header>
+
+        <div class="privacy-callout" role="note">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 10 0v2m-9 0h8a2 2 0 0 1 2 2v7H6v-7a2 2 0 0 1 2-2Zm4 4v2"/></svg>
+            <span>המידע בטופס רפואי ומוגן. הנתונים נשלחים ישירות לקליניקה ואינם נשמרים בדפדפן.</span>
+        </div>
+
+        <form id="medical-consultation-form" novalidate>
+            <section class="form-section" aria-labelledby="patient-details-heading">
+                <div class="section-heading" id="patient-details-heading">
+                    <span class="section-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0"/></svg>
+                    </span>
+                    <div><h2>פרטי המטופל</h2><p>פרטי זיהוי ויצירת קשר</p></div>
+                </div>
+
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="patientName">שם המטופל <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="patientName" name="patientName" type="text" required minlength="2" maxlength="120" autocomplete="name" placeholder="שם מלא" aria-describedby="patientName-help">
+                        <small id="patientName-help">שדה חובה</small>
+                    </div>
+                    <div class="field-group">
+                        <label for="patientPhone">טלפון <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="patientPhone" name="patientPhone" type="tel" required minlength="7" maxlength="24" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="052-0000000" aria-describedby="patientPhone-help">
+                        <small id="patientPhone-help">ניתן להזין ספרות, רווחים, מקפים וסימן +</small>
+                    </div>
+                    <div class="field-group">
+                        <label for="address">כתובת</label>
+                        <input id="address" name="address" type="text" maxlength="240" autocomplete="street-address" placeholder="כתובת מגורים">
+                    </div>
+                    <div class="field-group">
+                        <label for="patientId">ת.ז</label>
+                        <input id="patientId" name="patientId" type="text" maxlength="20" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="מספר זהות" aria-describedby="patientId-help">
+                        <small id="patientId-help">ספרות בלבד, אם צוין</small>
+                    </div>
+                    <div class="field-group">
+                        <label for="age">גיל</label>
+                        <input id="age" name="age" type="number" min="0" max="130" step="1" inputmode="numeric" autocomplete="off" placeholder="גיל בשנים">
+                    </div>
+                    <div class="field-group">
+                        <label for="gender">מין</label>
+                        <select id="gender" name="gender" autocomplete="sex">
+                            <option value="">לא צוין</option>
+                            <option value="זכר">זכר</option>
+                            <option value="נקבה">נקבה</option>
+                            <option value="אחר">אחר</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="consultation-heading">
+                <div class="section-heading" id="consultation-heading">
+                    <span class="section-icon section-icon-teal" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>
+                    </span>
+                    <div><h2>ייעוץ רפואי</h2><p>תלונות, רקע והרגלים</p></div>
+                </div>
+
+                <div class="field-grid">
+                    <div class="field-group field-wide">
+                        <label for="referralReason">סיבת הפניה/תלונות</label>
+                        <textarea id="referralReason" name="referralReason" rows="4" maxlength="3000" placeholder="נא לפרט את סיבת הפנייה והתלונות העיקריות"></textarea>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="backgroundDiseases">מחלות רקע</label>
+                        <textarea id="backgroundDiseases" name="backgroundDiseases" rows="3" maxlength="3000" placeholder="מחלות רקע רלוונטיות"></textarea>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="regularMedications">תרופות קבועות</label>
+                        <textarea id="regularMedications" name="regularMedications" rows="3" maxlength="3000" placeholder="שמות התרופות והמינונים, אם ידועים"></textarea>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="occupationActivity">עיסוק – רמת הפעילות הגופנית</label>
+                        <textarea id="occupationActivity" name="occupationActivity" rows="4" maxlength="3000" placeholder="תיאור העיסוק והפעילות הגופנית" aria-describedby="occupationActivity-help"></textarea>
+                        <small id="occupationActivity-help">במה הוא עובד? האם הוא פעיל גופנית? מתאמן? נא לפרט.</small>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="nutritionHabits">הרגלי תזונה</label>
+                        <textarea id="nutritionHabits" name="nutritionHabits" rows="4" maxlength="3000" placeholder="הרגלי תזונה, דיאטה, אלרגיות או הימנעות ממזון" aria-describedby="nutritionHabits-help"></textarea>
+                        <small id="nutritionHabits-help">האם המטופל נמצא בדיאטה מסוימת? קיימת אלרגיה? נמנע מאוכל מסוים? נא לפרט.</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section clinical-section" aria-labelledby="physical-heading">
+                <div class="section-heading" id="physical-heading">
+                    <span class="section-icon section-icon-teal" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M8 3v6a4 4 0 0 0 8 0V3M6 3h4m4 0h4m-6 10v2a5 5 0 0 0 10 0v-1m0 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
+                    </span>
+                    <div><h2>בדיקה פיזיקאלית וגופנית</h2><p>ממצאים קליניים ותוצאות בדיקות</p></div>
+                </div>
+
+                <div class="field-grid compact-grid">
+                    <div class="field-group">
+                        <label for="consciousness">הכרה</label>
+                        <input id="consciousness" name="consciousness" type="text" maxlength="300" placeholder="מצב הכרה">
+                    </div>
+                    <div class="field-group">
+                        <label for="temperature">חום</label>
+                        <input id="temperature" name="temperature" type="text" maxlength="40" inputmode="decimal" dir="ltr" placeholder="°C">
+                    </div>
+                    <div class="field-group">
+                        <label for="pulse">דופק</label>
+                        <input id="pulse" name="pulse" type="text" maxlength="40" inputmode="numeric" dir="ltr" placeholder="פעימות לדקה">
+                    </div>
+                    <div class="field-group">
+                        <label for="bloodPressure">ל״ד</label>
+                        <input id="bloodPressure" name="bloodPressure" type="text" maxlength="40" inputmode="numeric" dir="ltr" placeholder="120/80">
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="observation">הסתכלות</label>
+                        <textarea id="observation" name="observation" rows="3" maxlength="2000" placeholder="ממצאי הסתכלות"></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label for="bodyStructure">מבנה גוף</label>
+                        <textarea id="bodyStructure" name="bodyStructure" rows="3" maxlength="1000" placeholder="תיאור מבנה הגוף"></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label for="weight">משקל</label>
+                        <input id="weight" name="weight" type="text" maxlength="40" inputmode="decimal" dir="ltr" placeholder="ק״ג">
+                    </div>
+                    <div class="field-group">
+                        <label for="skinCondition">מצב העור</label>
+                        <textarea id="skinCondition" name="skinCondition" rows="3" maxlength="1500" placeholder="ממצאי עור"></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label for="palpation">מישוש</label>
+                        <textarea id="palpation" name="palpation" rows="3" maxlength="1500" placeholder="ממצאי מישוש"></textarea>
+                    </div>
+                    <div class="field-group vas-field">
+                        <label for="vasPainScore">כאב - לפי <bdi dir="ltr">VAS</bdi></label>
+                        <div class="vas-input-wrap">
+                            <input id="vasPainScore" name="vasPainScore" type="number" min="0" max="10" step="1" inputmode="numeric" placeholder="0–10" aria-describedby="vasPainScore-help">
+                            <span aria-hidden="true">/ 10</span>
+                        </div>
+                        <small id="vasPainScore-help" class="scale-help"><span><bdi dir="ltr">0</bdi> = ללא כאב</span><span><bdi dir="ltr">10</bdi> = הכאב החזק ביותר</span></small>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="jointExamination">בדיקת מפרקים</label>
+                        <textarea id="jointExamination" name="jointExamination" rows="4" maxlength="3000" placeholder="ממצאי בדיקת מפרקים" aria-describedby="jointExamination-help"></textarea>
+                        <small id="jointExamination-help">במידה ויש מגבלה או בעיה מסוימת.</small>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="muscleExamination">בדיקת שרירים</label>
+                        <textarea id="muscleExamination" name="muscleExamination" rows="4" maxlength="3000" placeholder="ממצאי בדיקת שרירים" aria-describedby="muscleExamination-help"></textarea>
+                        <small id="muscleExamination-help">במידה ויש בעיה בשרירים.</small>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="neurologicalExamination">בדיקה עצבית — מוטורית / סנסורית</label>
+                        <textarea id="neurologicalExamination" name="neurologicalExamination" rows="4" maxlength="3000" placeholder="ממצאים מוטוריים וסנסוריים"></textarea>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="balanceAndFalls">שיווי משקל</label>
+                        <textarea id="balanceAndFalls" name="balanceAndFalls" rows="4" maxlength="3000" placeholder="תיאור שיווי המשקל ונפילות" aria-describedby="balanceAndFalls-help"></textarea>
+                        <small id="balanceAndFalls-help">מרגיש חוסר שיווי משקל? האם נפל לאחרונה, וכמה פעמים?</small>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="specialTests">בדיקות מיוחדות</label>
+                        <textarea id="specialTests" name="specialTests" rows="4" maxlength="3000" placeholder="בדיקות מיוחדות או בדיקות הדמיה שבוצעו" aria-describedby="specialTests-help"></textarea>
+                        <small id="specialTests-help">האם המטופל עבר לאחרונה בדיקות כמו רנטגן, <bdi dir="ltr">CT</bdi>, <bdi dir="ltr">MRI</bdi> או בדיקות אחרות?</small>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="imagingResults">תוצאות בדיקה והדמיה</label>
+                        <textarea id="imagingResults" name="imagingResults" rows="4" maxlength="3000" placeholder="עיקרי התוצאות והממצאים"></textarea>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="bloodTests">בדיקות דם</label>
+                        <textarea id="bloodTests" name="bloodTests" rows="4" maxlength="3000" placeholder="בדיקות דם אחרונות, חסרים או ממצאים חריגים" aria-describedby="bloodTests-help"></textarea>
+                        <small id="bloodTests-help">האם בוצעו לאחרונה בדיקות דם? האם נמצאו חסרים או ממצאים חריגים?</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="conclusion-heading">
+                <div class="section-heading" id="conclusion-heading">
+                    <span class="section-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M4 19h16M6 16l4-4 3 2 5-7M18 7h-4m4 0v4"/></svg>
+                    </span>
+                    <div><h2>סיכום קליני</h2><p>סיכום, אבחנה ותכנית טיפול</p></div>
+                </div>
+
+                <div class="field-grid">
+                    <div class="field-group field-wide">
+                        <label for="consultationSummary">סיכום בדיקה וייעוץ</label>
+                        <textarea id="consultationSummary" name="consultationSummary" rows="5" maxlength="4000" placeholder="סיכום הבדיקה והייעוץ"></textarea>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="diagnosis">אבחנה</label>
+                        <textarea id="diagnosis" name="diagnosis" rows="4" maxlength="3000" placeholder="אבחנה קלינית"></textarea>
+                    </div>
+                    <div class="field-group field-wide">
+                        <label for="treatmentPlan">תכנית טיפול והמלצות</label>
+                        <textarea id="treatmentPlan" name="treatmentPlan" rows="5" maxlength="4000" placeholder="תכנית טיפול והמלצות להמשך"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section professional-section" aria-labelledby="professional-heading">
+                <div class="section-heading" id="professional-heading">
+                    <span class="section-icon section-icon-teal" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M7 4h10v16H7zM9 4V2h6v2M9 9h6M9 13h6M9 17h4"/></svg>
+                    </span>
+                    <div><h2>פרטי הגורם הרפואי</h2><p>פרטי הרופא המאשר</p></div>
+                </div>
+
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="doctorName">שם הרופא</label>
+                        <input id="doctorName" name="doctorName" type="text" maxlength="120" autocomplete="name" placeholder="שם מלא">
+                    </div>
+                    <div class="field-group">
+                        <label for="licenseNumber">מספר רישיון</label>
+                        <input id="licenseNumber" name="licenseNumber" type="text" maxlength="60" inputmode="numeric" dir="ltr" placeholder="מספר רישיון">
+                    </div>
+                    <div class="field-group">
+                        <label for="doctorSignature">חתימה</label>
+                        <input id="doctorSignature" name="doctorSignature" type="text" maxlength="120" placeholder="שם מוקלד לצורך חתימה" aria-describedby="doctorSignature-help">
+                        <small id="doctorSignature-help">במסמך ה-PDF תישמר גם שורת חתימה נקייה.</small>
+                    </div>
+                    <div class="field-group">
+                        <label for="examinationDate">תאריך</label>
+                        <input id="examinationDate" name="examinationDate" type="date" autocomplete="off" dir="ltr">
+                    </div>
+                </div>
+            </section>
+
+            <p id="form-status" class="sr-only" role="status" aria-live="polite"></p>
+        </form>
+    </main>
+
+    <div class="action-bar">
+        <div class="action-inner">
+            <p>המסמך ייווצר כקובץ <bdi dir="ltr">PDF</bdi> ויישלח לקליניקה.</p>
+            <button type="submit" form="medical-consultation-form" id="submit-button" class="submit-button" data-label="יצירה ושליחה">
+                <span class="button-label">יצירה ושליחה</span>
+                <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21 3-8 18-3-7-7-3 18-8ZM10 14l4-4"/></svg>
+                <span class="loading-spinner" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+
+    <dialog id="message-dialog" class="message-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+        <div class="dialog-icon" aria-hidden="true"></div>
+        <h2 id="dialog-title"></h2>
+        <p id="dialog-description"></p>
+        <button type="button" id="dialog-close">סגירה</button>
+    </dialog>
+
+    <script src="schema.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
