@@ -725,7 +725,7 @@ function createApp(options = {}) {
 
     for (const fileName of ['style.css', 'schema.js', 'app.js']) {
         app.get(`/${fileName}`, (_req, res) => {
-            res.setHeader('Cache-Control', 'public, max-age=3600');
+            res.setHeader('Cache-Control', 'no-cache, must-revalidate');
             res.sendFile(path.join(ROOT_DIR, fileName));
         });
     }
