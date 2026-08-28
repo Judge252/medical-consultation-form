@@ -522,6 +522,48 @@ function renderPdfFooterTemplate() {
     `;
 }
 
+function resolveBrowserExecutablePath() {
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+        return process.env.PUPPETEER_EXECUTABLE_PATH;
+    }
+
+    let candidates = [];
+    if (process.platform === 'win32') {
+        const localAppData = process.env.LOCALAPPDATA || '';
+        const programFiles = process.env.ProgramFiles || 'C:\\Program Files';
+        const programFilesX86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
+        candidates = [
+            path.join(programFiles, 'Google', 'Chrome', 'Application', 'chrome.exe'),
+            path.join(programFilesX86, 'Google', 'Chrome', 'Application', 'chrome.exe'),
+            path.join(localAppData, 'Google', 'Chrome', 'Application', 'chrome.exe'),
+            path.join(programFiles, 'Microsoft', 'Edge', 'Application', 'msedge.exe'),
+            path.join(programFilesX86, 'Microsoft', 'Edge', 'Application', 'msedge.exe'),
+        ];
+    } else if (process.platform === 'linux') {
+        candidates = [
+            '/usr/bin/google-chrome-stable',
+            '/usr/bin/google-chrome',
+            '/usr/bin/chromium',
+            '/usr/bin/chromium-browser',
+            '/snap/bin/chromium',
+        ];
+    } else if (process.platform === 'darwin') {
+        candidates = [
+            '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            '/Applications/Chromium.app/Contents/MacOS/Chromium',
+            '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+        ];
+    }
+
+    for (const candidate of candidates) {
+        if (candidate && fs.existsSync(candidate)) {
+            return candidate;
+        }
+    }
+
+    return undefined;
+}
+
 async function generatePdfBuffer(formData) {
     const html = renderPdfHtml(formData);
     let browser;
@@ -530,11 +572,18 @@ async function generatePdfBuffer(formData) {
         const launchOptions = {
             headless: true,
             timeout: 30000,
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu',
+            ],
         };
 
-        if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-            launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+        const executablePath = resolveBrowserExecutablePath();
+        if (executablePath) {
+            launchOptions.executablePath = executablePath;
         }
 
         browser = await puppeteer.launch(launchOptions);
@@ -553,6 +602,9 @@ async function generatePdfBuffer(formData) {
         });
 
         return Buffer.from(pdfBuffer);
+    } catch (error) {
+        console.error('[pdf-generation] Failed to generate PDF buffer:', error.message);
+        throw error;
     } finally {
         if (browser) {
             await browser.close();
@@ -609,7 +661,7 @@ function resolveMailTransport({ env, emailSender, mailConfig }) {
     const missingVariables = requiredVariables.filter((name) => !normalizeText(env[name], false));
 
     if (missingVariables.length) {
-        throw new OperationalError('EMAIL_CONFIGURATION_ERROR', 'Required email environment variables are missing');
+        throw new OperationalError('EMAIL_CONFIGURATION_ERROR', `חסרים משתני סביבה לשליחת דוא״ל: ${missingVariables.join(', ')}`);
     }
 
     const resend = new Resend(env.RESEND_API_KEY);
@@ -623,7 +675,7 @@ function resolveMailTransport({ env, emailSender, mailConfig }) {
 function withTimeout(promise, timeoutMs) {
     let timeoutId;
     const timeout = new Promise((_, reject) => {
-        timeoutId = setTimeout(() => reject(new OperationalError('EMAIL_TIMEOUT', 'Email delivery timed out')), timeoutMs);
+        timeoutId = setTimeout(() => reject(new OperationalError('EMAIL_TIMEOUT', 'שליחת הדוא״ל עברה את מגבלת הזמן (timeout)')), timeoutMs);
     });
 
     return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
@@ -631,8 +683,12 @@ function withTimeout(promise, timeoutMs) {
 
 function logOperationalError(stage, error) {
     const errorType = error && error.name ? error.name : 'Error';
-    const errorCode = error && error.code ? `:${error.code}` : '';
-    console.error(`[${stage}] ${errorType}${errorCode}`);
+    const errorCode = error && error.code ? ` (${error.code})` : '';
+    const errorMsg = error && error.message ? `: ${error.message}` : '';
+    console.error(`[${stage}] ${errorType}${errorCode}${errorMsg}`);
+    if (error && error.stack) {
+        console.error(error.stack);
+    }
 }
 
 function setSecurityHeaders(_req, res, next) {
@@ -732,7 +788,8 @@ function createApp(options = {}) {
                 return res.status(503).json({
                     status: 'error',
                     code: 'EMAIL_CONFIGURATION_ERROR',
-                    message: 'שירות השליחה אינו מוגדר כעת.',
+                    message: error.message || 'שירות השליחה אינו מוגדר כעת.',
+                    detail: error.message,
                 });
             }
 
@@ -740,7 +797,7 @@ function createApp(options = {}) {
             try {
                 pdfBuffer = await pdfFactory(validation.data);
                 if (!Buffer.isBuffer(pdfBuffer) || pdfBuffer.length < 1000) {
-                    throw new OperationalError('INVALID_PDF', 'Generated PDF is invalid');
+                    throw new OperationalError('INVALID_PDF', 'קובץ ה-PDF שנוצר אינו תקין');
                 }
             } catch (error) {
                 logOperationalError('pdf-generation', error);
@@ -748,6 +805,7 @@ function createApp(options = {}) {
                     status: 'error',
                     code: 'PDF_GENERATION_FAILED',
                     message: 'יצירת קובץ ה-PDF לא הושלמה.',
+                    detail: error.message,
                 });
             }
 
@@ -756,14 +814,17 @@ function createApp(options = {}) {
                 const result = await withTimeout(Promise.resolve(transport.send(emailPayload)), EMAIL_TIMEOUT_MS);
 
                 if (result && result.error) {
-                    throw new OperationalError('EMAIL_PROVIDER_ERROR', 'Email provider rejected the request');
+                    const providerErrorMsg = result.error.message || JSON.stringify(result.error);
+                    console.error('[email-delivery] Resend error:', providerErrorMsg);
+                    throw new OperationalError('EMAIL_PROVIDER_ERROR', providerErrorMsg);
                 }
             } catch (error) {
                 logOperationalError('email-delivery', error);
                 return res.status(502).json({
                     status: 'error',
                     code: 'EMAIL_DELIVERY_FAILED',
-                    message: 'שליחת הטופס לא הושלמה.',
+                    message: 'שליחת הטופס בדוא״ל לא הושלמה.',
+                    detail: error.message,
                 });
             }
 

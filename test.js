@@ -69,6 +69,9 @@ async function listen(app) {
 }
 
 async function close(server) {
+    if (typeof server.closeAllConnections === 'function') {
+        server.closeAllConnections();
+    }
     return new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
 }
 
@@ -87,6 +90,31 @@ test('medical consultation application', async (t) => {
         ));
         assert.equal(invalidResult.valid, false);
         assert.ok(invalidResult.errors.some((error) => error.field === 'vasPainScore'));
+    });
+
+    await t.test('enforces all mandatory patient details (name, phone, address, id, age, gender)', () => {
+        const mandatoryFields = ['patientName', 'patientPhone', 'address', 'patientId', 'age', 'gender'];
+
+        for (const fieldKey of mandatoryFields) {
+            const dataMissingField = { ...sampleData, [fieldKey]: '' };
+            const validation = validateAndNormalizeSubmission(createSubmissionBody(
+                `00000000-0000-4000-8000-missing-${fieldKey.slice(0, 8)}`,
+                dataMissingField,
+            ));
+            assert.equal(validation.valid, false, `Expected validation to fail when ${fieldKey} is missing`);
+            assert.ok(validation.errors.some((err) => err.field === fieldKey), `Error for ${fieldKey} should be present`);
+        }
+
+        // Only mandatory patient details provided, optional fields empty
+        const onlyMandatoryData = Object.fromEntries(schema.fields.map((field) => [field.key, '']));
+        for (const fieldKey of mandatoryFields) {
+            onlyMandatoryData[fieldKey] = sampleData[fieldKey];
+        }
+        const mandatoryValidation = validateAndNormalizeSubmission(createSubmissionBody(
+            '00000000-0000-4000-8000-mandatory-only',
+            onlyMandatoryData,
+        ));
+        assert.equal(mandatoryValidation.valid, true, 'Validation should pass when all required patient details are present');
     });
 
     await t.test('escapes submitted values and renders every field in the PDF template', () => {
@@ -138,6 +166,7 @@ test('medical consultation application', async (t) => {
                 assert.equal(response.status, 200, `Failed to serve ${resource}`);
             }
 
+            // Submitting empty body fails
             const requiredResponse = await fetch(`${baseUrl}/submit-form`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -145,6 +174,54 @@ test('medical consultation application', async (t) => {
             });
             assert.equal(requiredResponse.status, 400);
             assert.equal((await requiredResponse.json()).code, 'VALIDATION_ERROR');
+
+            // Submitting with missing address fails
+            const missingAddressResponse = await fetch(`${baseUrl}/submit-form`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(createSubmissionBody(
+                    '00000000-0000-4000-8000-00000000000a',
+                    { ...sampleData, address: '' },
+                )),
+            });
+            assert.equal(missingAddressResponse.status, 400);
+            assert.equal((await missingAddressResponse.json()).code, 'VALIDATION_ERROR');
+
+            // Submitting with missing patient ID fails
+            const missingIdResponse = await fetch(`${baseUrl}/submit-form`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(createSubmissionBody(
+                    '00000000-0000-4000-8000-00000000000b',
+                    { ...sampleData, patientId: '' },
+                )),
+            });
+            assert.equal(missingIdResponse.status, 400);
+            assert.equal((await missingIdResponse.json()).code, 'VALIDATION_ERROR');
+
+            // Submitting with missing age fails
+            const missingAgeResponse = await fetch(`${baseUrl}/submit-form`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(createSubmissionBody(
+                    '00000000-0000-4000-8000-00000000000c',
+                    { ...sampleData, age: '' },
+                )),
+            });
+            assert.equal(missingAgeResponse.status, 400);
+            assert.equal((await missingAgeResponse.json()).code, 'VALIDATION_ERROR');
+
+            // Submitting with missing gender fails
+            const missingGenderResponse = await fetch(`${baseUrl}/submit-form`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(createSubmissionBody(
+                    '00000000-0000-4000-8000-00000000000d',
+                    { ...sampleData, gender: '' },
+                )),
+            });
+            assert.equal(missingGenderResponse.status, 400);
+            assert.equal((await missingGenderResponse.json()).code, 'VALIDATION_ERROR');
 
             const invalidVasResponse = await fetch(`${baseUrl}/submit-form`, {
                 method: 'POST',

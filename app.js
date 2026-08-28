@@ -31,38 +31,55 @@
         const value = normalizeClientValue(input.value);
         input.setCustomValidity('');
 
-        if (input.id === 'patientName' && value && value.length < 2) {
-            input.setCustomValidity('יש להזין שם מטופל מלא.');
-        }
-
-        if (input.id === 'patientPhone' && value && !/^[+\d][\d\s().-]{5,22}\d$/.test(value)) {
-            input.setCustomValidity('יש להזין מספר טלפון תקין.');
-        }
-
-        if (input.id === 'patientId' && value && !/^\d{5,12}$/.test(value)) {
-            input.setCustomValidity('יש להזין 5 עד 12 ספרות בלבד.');
-        }
-
-        if (input.id === 'age' && value && (!Number.isInteger(Number(value)) || Number(value) < 0 || Number(value) > 130)) {
-            input.setCustomValidity('יש להזין גיל שלם בין 0 ל-130.');
-        }
-
-        if (input.id === 'vasPainScore' && value && (!Number.isInteger(Number(value)) || Number(value) < 0 || Number(value) > 10)) {
-            input.setCustomValidity('יש להזין ציון כאב שלם בין 0 ל-10.');
+        if (input.required && !value) {
+            input.setCustomValidity('יש למלא שדה זה.');
+        } else if (input.id === 'patientName') {
+            if (value.length < 2) {
+                input.setCustomValidity('יש להזין שם מטופל מלא.');
+            }
+        } else if (input.id === 'patientPhone') {
+            if (!/^[+\d][\d\s().-]{5,22}\d$/.test(value)) {
+                input.setCustomValidity('יש להזין מספר טלפון תקין.');
+            }
+        } else if (input.id === 'address') {
+            if (value.length < 2) {
+                input.setCustomValidity('יש להזין כתובת מגורים תקינה.');
+            }
+        } else if (input.id === 'patientId') {
+            if (!/^\d{5,12}$/.test(value)) {
+                input.setCustomValidity('יש להזין 5 עד 12 ספרות בלבד.');
+            }
+        } else if (input.id === 'age') {
+            if (!Number.isInteger(Number(value)) || Number(value) < 0 || Number(value) > 130) {
+                input.setCustomValidity('יש להזין גיל שלם בין 0 ל-130.');
+            }
+        } else if (input.id === 'gender') {
+            if (!['זכר', 'נקבה', 'אחר'].includes(value)) {
+                input.setCustomValidity('יש לבחור מין מהרשימה.');
+            }
+        } else if (input.id === 'vasPainScore' && value) {
+            if (!Number.isInteger(Number(value)) || Number(value) < 0 || Number(value) > 10) {
+                input.setCustomValidity('יש להזין ציון כאב שלם בין 0 ל-10.');
+            }
         }
 
         input.setAttribute('aria-invalid', input.validity.valid ? 'false' : 'true');
     }
 
     function validateAllFields() {
+        let allValid = true;
         for (const field of schema.fields) {
             const input = document.getElementById(field.key);
             if (input) {
                 setFieldValidationMessage(input);
+                if (!input.validity.valid) {
+                    allValid = false;
+                    input.setAttribute('aria-invalid', 'true');
+                }
             }
         }
 
-        return form.checkValidity();
+        return form.checkValidity() && allValid;
     }
 
     function collectFormData() {
@@ -143,12 +160,12 @@
         const valid = validateAllFields();
 
         if (!valid) {
-            const firstInvalidField = form.querySelector(':invalid');
-            formStatus.textContent = 'יש להשלים את שדות החובה ולתקן את השדות המסומנים.';
+            const firstInvalidField = form.querySelector(':invalid, [aria-invalid="true"]');
+            formStatus.textContent = 'יש להשלים את כל פרטי המטופל (שדות חובה) ולתקן את השדות המסומנים.';
 
             await showMessage({
                 title: 'יש להשלים את שדות החובה',
-                description: 'נא לבדוק את השדות המסומנים ולתקן את המידע לפני השליחה.',
+                description: 'נא למלא את כל פרטי המטופל ולתקן את השדות המסומנים לפני השליחה.',
                 type: 'error',
                 closeText: 'חזרה לטופס',
             });
@@ -183,8 +200,11 @@
             const result = await parseJsonResponse(response);
 
             if (!response.ok || result.status !== 'success') {
-                const requestError = new Error(result.code || 'SUBMISSION_FAILED');
+                const requestError = new Error(result.message || result.code || 'SUBMISSION_FAILED');
                 requestError.code = result.code || 'SUBMISSION_FAILED';
+                requestError.serverMessage = result.message;
+                requestError.detail = result.detail;
+                requestError.errors = result.errors;
                 throw requestError;
             }
 
@@ -203,13 +223,22 @@
             currentSubmissionId = null;
             window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         } catch (error) {
+            console.error('[Form Submission Error]:', error);
             const isValidationError = error && error.code === 'VALIDATION_ERROR';
             const isTimeout = error && error.name === 'AbortError';
-            const description = isValidationError
-                ? 'השרת לא קיבל חלק מהמידע. נא לבדוק את השדות המסומנים ולנסות שוב.'
-                : isTimeout
-                    ? 'השליחה ארכה זמן רב מהצפוי. הנתונים שמילאת נשמרו, וניתן לנסות שוב.'
-                    : generalFailureText;
+            
+            let description;
+            if (isValidationError) {
+                description = 'השרת לא קיבל חלק מהמידע. נא לבדוק את השדות המסומנים ולנסות שוב.';
+            } else if (isTimeout) {
+                description = 'השליחה ארכה זמן רב מהצפוי. הנתונים שמילאת נשמרו, וניתן לנסות שוב.';
+            } else if (error && error.serverMessage) {
+                description = error.serverMessage;
+            } else if (error && error.message && error.message !== 'SUBMISSION_FAILED') {
+                description = error.message;
+            } else {
+                description = generalFailureText;
+            }
 
             formStatus.textContent = description;
             await showMessage({
@@ -232,6 +261,12 @@
         }
 
         input.addEventListener('input', () => {
+            setFieldValidationMessage(input);
+            if (input.validity.valid) {
+                input.setAttribute('aria-invalid', 'false');
+            }
+        });
+        input.addEventListener('change', () => {
             setFieldValidationMessage(input);
             if (input.validity.valid) {
                 input.setAttribute('aria-invalid', 'false');

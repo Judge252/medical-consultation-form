@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#0a1020">
-    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="color-scheme" content="light">
     <meta name="description" content="טופס ייעוץ ובדיקה רפואית של TheClinic">
     <title>טופס ייעוץ ובדיקה רפואית | TheClinic</title>
     <link rel="icon" type="image/png" href="assets/theclinic-logo.png">
@@ -12,13 +12,6 @@
 </head>
 <body>
     <a class="skip-link" href="#medical-consultation-form">מעבר ישירות לטופס</a>
-
-    <div class="site-background" aria-hidden="true">
-        <span class="background-orb orb-gold"></span>
-        <span class="background-orb orb-teal"></span>
-        <span class="background-orb orb-blue"></span>
-        <span class="noise-layer"></span>
-    </div>
 
     <main class="page-shell">
         <header class="clinic-header" aria-labelledby="page-title">
@@ -70,26 +63,29 @@
                         <small id="patientPhone-help">ניתן להזין ספרות, רווחים, מקפים וסימן +</small>
                     </div>
                     <div class="field-group">
-                        <label for="address">כתובת</label>
-                        <input id="address" name="address" type="text" maxlength="240" autocomplete="street-address" placeholder="כתובת מגורים">
+                        <label for="address">כתובת <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="address" name="address" type="text" required minlength="2" maxlength="240" autocomplete="street-address" placeholder="כתובת מגורים" aria-describedby="address-help">
+                        <small id="address-help">שדה חובה</small>
                     </div>
                     <div class="field-group">
-                        <label for="patientId">ת.ז</label>
-                        <input id="patientId" name="patientId" type="text" maxlength="20" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="מספר זהות" aria-describedby="patientId-help">
-                        <small id="patientId-help">ספרות בלבד, אם צוין</small>
+                        <label for="patientId">ת.ז <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="patientId" name="patientId" type="text" required minlength="5" maxlength="20" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="מספר זהות" aria-describedby="patientId-help">
+                        <small id="patientId-help">5 עד 12 ספרות (שדה חובה)</small>
                     </div>
                     <div class="field-group">
-                        <label for="age">גיל</label>
-                        <input id="age" name="age" type="number" min="0" max="130" step="1" inputmode="numeric" autocomplete="off" placeholder="גיל בשנים">
+                        <label for="age">גיל <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="age" name="age" type="number" required min="0" max="130" step="1" inputmode="numeric" autocomplete="off" placeholder="גיל בשנים" aria-describedby="age-help">
+                        <small id="age-help">שדה חובה</small>
                     </div>
                     <div class="field-group">
-                        <label for="gender">מין</label>
-                        <select id="gender" name="gender" autocomplete="sex">
-                            <option value="">לא צוין</option>
+                        <label for="gender">מין <span class="required-mark" aria-hidden="true">*</span></label>
+                        <select id="gender" name="gender" required autocomplete="sex" aria-describedby="gender-help">
+                            <option value="">נא לבחור מין</option>
                             <option value="זכר">זכר</option>
                             <option value="נקבה">נקבה</option>
                             <option value="אחר">אחר</option>
                         </select>
+                        <small id="gender-help">שדה חובה</small>
                     </div>
                 </div>
             </section>
@@ -175,11 +171,21 @@
                     </div>
                     <div class="field-group vas-field">
                         <label for="vasPainScore">כאב - לפי <bdi dir="ltr">VAS</bdi></label>
-                        <div class="vas-input-wrap">
-                            <input id="vasPainScore" name="vasPainScore" type="number" min="0" max="10" step="1" inputmode="numeric" placeholder="0–10" aria-describedby="vasPainScore-help">
-                            <span aria-hidden="true">/ 10</span>
-                        </div>
-                        <small id="vasPainScore-help" class="scale-help"><span><bdi dir="ltr">0</bdi> = ללא כאב</span><span><bdi dir="ltr">10</bdi> = הכאב החזק ביותר</span></small>
+                        <select id="vasPainScore" name="vasPainScore" aria-describedby="vasPainScore-help">
+                            <option value="">נא לבחור דרגת כאב (0–10)</option>
+                            <option value="0">0 – ללא כאב</option>
+                            <option value="1">1 – כאב קל מאוד</option>
+                            <option value="2">2 – כאב קל</option>
+                            <option value="3">3 – כאב בינוני-קל</option>
+                            <option value="4">4 – כאב בינוני</option>
+                            <option value="5">5 – כאב בינוני מוגבר</option>
+                            <option value="6">6 – כאב חזק-בינוני</option>
+                            <option value="7">7 – כאב חזק</option>
+                            <option value="8">8 – כאב חזק מאוד</option>
+                            <option value="9">9 – כאב חמור מאוד</option>
+                            <option value="10">10 – הכאב החזק ביותר</option>
+                        </select>
+                        <small id="vasPainScore-help">סולם דרגות כאב מ-0 (ללא כאב) עד 10 (הכאב החזק ביותר)</small>
                     </div>
                     <div class="field-group field-wide">
                         <label for="jointExamination">בדיקת מפרקים</label>

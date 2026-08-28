@@ -16,10 +16,10 @@
             fields: [
                 { key: 'patientName', label: 'שם המטופל', type: 'text', required: true, maxLength: 120, wide: false },
                 { key: 'patientPhone', label: 'טלפון', type: 'text', required: true, maxLength: 24, direction: 'ltr', validation: 'phone', wide: false },
-                { key: 'address', label: 'כתובת', type: 'text', maxLength: 240, wide: false },
-                { key: 'patientId', label: 'ת.ז', type: 'text', maxLength: 20, direction: 'ltr', validation: 'identity', wide: false },
-                { key: 'age', label: 'גיל', type: 'number', min: 0, max: 130, wide: false },
-                { key: 'gender', label: 'מין', type: 'enum', values: ['זכר', 'נקבה', 'אחר'], maxLength: 20, wide: false },
+                { key: 'address', label: 'כתובת', type: 'text', required: true, maxLength: 240, wide: false },
+                { key: 'patientId', label: 'ת.ז', type: 'text', required: true, maxLength: 20, direction: 'ltr', validation: 'identity', wide: false },
+                { key: 'age', label: 'גיל', type: 'number', required: true, min: 0, max: 130, wide: false },
+                { key: 'gender', label: 'מין', type: 'enum', required: true, values: ['זכר', 'נקבה', 'אחר'], maxLength: 20, wide: false },
             ],
         },
         {
