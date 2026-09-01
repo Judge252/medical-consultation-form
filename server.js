@@ -327,58 +327,78 @@ function renderPdfHtml(formData) {
 
         .pdf-header {
             display: grid;
-            grid-template-columns: 34mm 1fr;
+            grid-template-columns: 1fr auto;
             align-items: center;
+            justify-content: space-between;
             gap: 5mm;
             margin-bottom: 4mm;
-            padding: 3.5mm;
-            border: 1px solid #d9e2ee;
-            border-top: 3px solid #224779;
-            border-radius: 4mm;
-            background: linear-gradient(135deg, #f7fafc, #eef5f5);
+            padding: 4mm 5mm;
+            border: 1px solid #e2e8f0;
+            border-top: 3px solid #1e3a8a;
+            border-radius: 3.5mm;
+            background: #f8fafc;
             break-inside: avoid;
         }
 
-        .pdf-logo-wrap {
-            display: grid;
-            place-items: center;
-            min-height: 20mm;
-            padding: 1.5mm;
-            border: 1px solid #dbe3ec;
-            border-radius: 3mm;
-            background: #ffffff;
-        }
-
-        .pdf-logo {
-            width: 100%;
-            height: auto;
-        }
-
-        .pdf-brand h1 {
-            margin: 0;
-            color: #17375e;
-            font-size: 18pt;
-            line-height: 1.15;
+        .pdf-brand {
+            min-width: 0;
         }
 
         .clinic-name {
-            margin: 0 0 0.6mm;
-            color: #3d8540;
-            font-size: 10.2pt;
+            margin: 0 0 1mm;
+            color: #1d6a42;
+            font-size: 9.8pt;
             font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .pdf-brand h1 {
+            margin: 0 0 2mm;
+            color: #17375e;
+            font-size: 16.5pt;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.2px;
         }
 
         .contact-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8mm 3mm;
-            margin-top: 1.2mm;
-            color: #46556a;
-            font-size: 8.1pt;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.2mm;
+            padding-top: 2mm;
+            border-top: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 8pt;
+            line-height: 1.35;
         }
 
-        .contact-grid span {
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 2mm;
             white-space: nowrap;
+        }
+
+        .contact-sep {
+            color: #94a3b8;
+            font-size: 7pt;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .pdf-logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pdf-logo {
+            display: block;
+            width: 38mm;
+            max-width: 42mm;
+            height: auto;
+            object-fit: contain;
         }
 
         .pdf-section {
@@ -472,18 +492,24 @@ function renderPdfHtml(formData) {
 </head>
 <body>
     <header class="pdf-header">
-        <div class="pdf-logo-wrap">
-            <img class="pdf-logo" src="${assets.logo}" alt="TheClinic Healthcare and Therapy">
-        </div>
         <div class="pdf-brand">
             <p class="clinic-name">${escapeHtml(clinic.name)}</p>
             <h1>${escapeHtml(clinic.formTitle)}</h1>
             <div class="contact-grid">
-                <span>${escapeHtml(clinic.branchOne)}</span>
-                <span>${escapeHtml(clinic.branchTwo)}</span>
-                <span dir="ltr">${escapeHtml(clinic.phoneOne)} / ${escapeHtml(clinic.phoneTwo)}</span>
-                <span dir="ltr">${escapeHtml(clinic.displayEmail)}</span>
+                <div class="contact-row">
+                    <span>${escapeHtml(clinic.branchOne)}</span>
+                    <span class="contact-sep">•</span>
+                    <span>${escapeHtml(clinic.branchTwo)}</span>
+                </div>
+                <div class="contact-row">
+                    <span dir="ltr">${escapeHtml(clinic.phoneOne)} / ${escapeHtml(clinic.phoneTwo)}</span>
+                    <span class="contact-sep">•</span>
+                    <span dir="ltr">${escapeHtml(clinic.displayEmail)}</span>
+                </div>
             </div>
+        </div>
+        <div class="pdf-logo-wrap">
+            <img class="pdf-logo" src="${assets.logo}" alt="TheClinic Healthcare and Therapy">
         </div>
     </header>
 
