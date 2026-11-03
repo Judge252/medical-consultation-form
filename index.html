@@ -1,20 +1,23 @@
 <!doctype html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#f4f6fa">
     <meta name="color-scheme" content="light">
     <meta name="description" content="טופס ייעוץ ובדיקה רפואית של TheClinic">
     <title>טופס ייעוץ ובדיקה רפואית | TheClinic</title>
     <link rel="icon" type="image/png" href="assets/theclinic-logo.png">
+    <script src="assets/clinic-theme.js?v=20261103-light"></script>
     <link rel="stylesheet" href="style.css?v=1.1.0">
+    <link rel="stylesheet" href="assets/clinic-ui.css?v=20261103">
 </head>
 <body>
     <a class="skip-link" href="#medical-consultation-form">מעבר ישירות לטופס</a>
 
     <main class="page-shell">
         <header class="clinic-header" aria-labelledby="page-title">
+            <div class="header-tools"><div class="theme-switch" role="group" aria-label="ערכת צבעים"><button type="button" data-theme-choice="dark" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg><span>כהה</span></button><button type="button" data-theme-choice="light" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><span>בהיר</span></button></div></div>
             <div class="logo-panel">
                 <img src="assets/theclinic-logo.png" alt="TheClinic Healthcare and Therapy" class="clinic-logo" width="800" height="321">
             </div>
@@ -300,5 +303,6 @@
 
     <script src="schema.js?v=1.1.0"></script>
     <script src="app.js?v=1.1.0"></script>
+
 </body>
 </html>
